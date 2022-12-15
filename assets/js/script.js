@@ -1,3 +1,18 @@
+const debounce = function(func, wait, immediate) {
+  let timeout;
+  return function(...args) {
+    const context = this;
+    const later = function () {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+};
+
 const anoAtualFooter = () => {
     const ano = document.querySelector("#span")
     ano.innerHTML = new Date().getFullYear()
@@ -19,6 +34,10 @@ function animeScroll(){
     })
 }
 
-window.addEventListener('scroll', function(){
-    animeScroll()
-})
+animeScroll()
+
+if(target.length){
+    window.addEventListener('scroll', debounce(function(){
+        animeScroll()
+    }, 200))
+}
